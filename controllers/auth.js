@@ -6,7 +6,6 @@ var controller = {
 
     login: (req, res) => {
         let user = req.body.user
-
         Usuario.getUserByEmail(user).then(respuesta => {
             if (respuesta != null) {
                 const payload = {

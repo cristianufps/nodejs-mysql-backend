@@ -1,49 +1,48 @@
 
 'use strict';
 
-var mysql = require('promise-mysql');
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-
-var bd
-
-var pool = mysql.createPool({
-    connectionLimit: 113,
-    host: config.host,
-    user: config.username,
-    password: config.password,
-    database: config.database,
-}).then(res => {
-    bd = res
-});
-
-
-exports.getUsers = (campos, fn) => {
-    return bd.query('SELECT * FROM usuario')
-        .then(rows => {
-            return Promise.resolve(rows)
-        })
-        .catch(err => {
-            return Promise.reject(err)
-        })
+const db = require('../config/bd')
+exports.getUsers = async (campos, fn) => {
+    try {
+        const con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM usuario');
+        if (!rows) {
+            return [];
+        }
+        return rows;
+    }
+    catch (e) {
+        throw e;
+    }
 }
 
-exports.getUserById = (campos, fn) => {
-    return bd.query('SELECT * FROM usuario WHERE usua_id = ? ', [campos])
-        .then(rows => {
-            return Promise.resolve(rows[0])
-        })
-        .catch(err => {
-            return Promise.reject(err)
-        })
+exports.getUserById = async (campos, fn) => {
+
+    try {
+        const con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM usuario WHERE usua_id = ? limit 1', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    }
+    catch (e) {
+        throw e;
+    }
 }
 
-exports.getUserByEmail = (campos, fn) => {
-    return bd.query('SELECT * FROM usuario WHERE usua_correo = ? ', [campos])
-        .then(rows => {
-            return Promise.resolve(rows[0])
-        })
-        .catch(err => {
-            return Promise.reject(err)
-        })
+exports.getUserByEmail = async (campos, fn) => {
+
+    try {
+        const con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM usuario WHERE usua_correo = ? limit 1', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    }
+    catch (e) {
+        throw e;
+    }
 }
+
