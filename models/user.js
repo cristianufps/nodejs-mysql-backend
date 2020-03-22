@@ -46,3 +46,17 @@ exports.getUserByEmail = async (campos, fn) => {
     }
 }
 
+exports.getPasswordById = async (campos, fn) => {
+
+    try {
+        const con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM autenticacion WHERE usua_id = ? limit 1', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    }
+    catch (e) {
+        throw e;
+    }
+}
