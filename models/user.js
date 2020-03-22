@@ -29,8 +29,17 @@ exports.getUsers = (campos, fn) => {
 }
 
 exports.getUserById = (campos, fn) => {
-    console.log("esto llega ", campos)
     return bd.query('SELECT * FROM usuario WHERE usua_id = ? ', [campos])
+        .then(rows => {
+            return Promise.resolve(rows[0])
+        })
+        .catch(err => {
+            return Promise.reject(err)
+        })
+}
+
+exports.getUserByEmail = (campos, fn) => {
+    return bd.query('SELECT * FROM usuario WHERE usua_correo = ? ', [campos])
         .then(rows => {
             return Promise.resolve(rows[0])
         })

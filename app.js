@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var app = express();
 
 //cargar ficheros rutas
+var auth_route = require('./routes/auth')
 var users_routes = require('./routes/user')
 
 //Middlewares
@@ -26,6 +27,6 @@ app.use((req, res, next) => {
 
 //Añadir prefijos a rutas
 
-app.use('/', users_routes)
+app.use('/', users_routes, auth_route)
 
 module.exports = app;
