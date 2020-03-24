@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const saltRounds = 12;
 var Usuario = require('../models/user')
+var Email = require('../util/email')
 var usuarioRegistrado = null
 
 // bcrypt.hash(pass, saltRounds, function (err, hash) {
@@ -13,7 +14,6 @@ var usuarioRegistrado = null
 // });
 
 var controller = {
-
     login: (req, res) => {
         let user = req.body.user
         let pass = req.body.password
@@ -36,6 +36,7 @@ var controller = {
 
                                 return res.status(200).send({
                                     status: 'success',
+                                    message: 'Se ha logueado',
                                     token: token
                                 })
                             } else {
@@ -72,13 +73,18 @@ var controller = {
     me: (req, res) => {
         let token = req.headers['authorization']
         token = token.replace('Bearer ', '')
-        var decoded = jwt.verify(token, 'SecretPassword');
-
-        console.log(decoded)
+        let decoded = jwt.verify(token, 'SecretPassword');
         let idUsuario = decoded.user_id
-
         if (idUsuario != null) {
             Usuario.getUserById(idUsuario).then(usuario => {
+                // let datos = {
+                //     para: usuario.correo,
+                //     asunto: 'nose'
+                // }
+
+                // Email.send(datos).then(envio => {
+                //     console.log("se hizo el envio?")
+                // })
                 if (usuario != null) {
                     return res.status(200).send({
                         status: 'Success',
