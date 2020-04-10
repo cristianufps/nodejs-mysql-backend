@@ -135,6 +135,7 @@ var controller = {
         let token = req.headers['authorization']
         let newPassword = req.body.password
         token = token.replace('Bearer ', '')
+        console.log("Ha llegado > ", token)
 
         try {
             let decoded = jwt.verify(token, 'SecretPassword');
@@ -149,7 +150,7 @@ var controller = {
                     if (usuario != null) {
                         return res.status(200).send({
                             status: 'Success',
-                            message: 'Great'
+                            message: 'Se ha establecido la contraseña con éxito.'
                         })
                     } else {
                         return res.status(404).send({
