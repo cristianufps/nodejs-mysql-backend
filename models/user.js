@@ -47,7 +47,6 @@ exports.getUserByEmail = async (campos, fn) => {
 }
 
 exports.getPasswordById = async (campos, fn) => {
-
     try {
         const con = await db.getConnection();
         const rows = await con.query('SELECT * FROM autenticacion WHERE usua_id = ? limit 1', [campos]);
@@ -55,6 +54,24 @@ exports.getPasswordById = async (campos, fn) => {
             throw new Error('no existe');
         }
         return rows[0];
+    }
+    catch (e) {
+        throw e;
+    }
+}
+
+
+exports.updatePasswordByUserId = async (campos, fn) => {
+
+    try {
+        const con = await db.getConnection();
+        let query = 'UPDATE autenticacion SET aute_password = ? WHERE usua_id = ? '
+
+        const rows = await con.query(query, [campos.password, campos.usua_id]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows;
     }
     catch (e) {
         throw e;

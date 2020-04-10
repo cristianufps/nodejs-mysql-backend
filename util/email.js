@@ -24,10 +24,10 @@ exports.send = async (campos, fn) => {
     // send mail with defined transport object
     let info = await transporter.sendMail({
         from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: campos.para, // list of receivers
-        subject: campos.asunto, // Subject line
-        text: campos.mensaje, // plain text body
-        html: "<b>Si le llega esto es porque soy crack :D </b>" // html body
+        to: campos.to, // list of receivers
+        subject: campos.subject, // Subject line
+        text: campos.mail, // plain text body
+        // html: "<b>Si le llega esto es porque soy crack :D </b>" // html body
     });
 
     console.log("Message sent: %s", info.messageId);

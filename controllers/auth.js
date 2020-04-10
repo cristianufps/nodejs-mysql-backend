@@ -4,14 +4,9 @@ const bcrypt = require('bcrypt');
 const saltRounds = 12;
 var Usuario = require('../models/user')
 var Email = require('../util/email')
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
 var usuarioRegistrado = null
-
-// bcrypt.hash(pass, saltRounds, function (err, hash) {
-// Store hash in your password DB.
-// example output, taking your hash
-// hash = $2a$10$fKAyjaG0pCkisZfRpKsBxursD6QigXQpm1TaPBDZ4KhIZRguYPKHe
-// console.log("hash ---<< ", hash)
-// });
 
 var controller = {
     login: (req, res) => {
@@ -33,7 +28,6 @@ var controller = {
                                 const token = jwt.sign(payload, 'SecretPassword', {
                                     expiresIn: 3600
                                 });
-
                                 return res.status(200).send({
                                     status: 'success',
                                     message: 'Se ha logueado',
@@ -54,14 +48,12 @@ var controller = {
                         message: 'No se encontró la contraseña'
                     })
                 })
-
             } else {
                 return res.status(404).send({
                     status: 'Error',
                     message: 'No se encontro el usuario'
                 })
             }
-
         }).catch(error => {
             return res.status(404).send({
                 status: 'Error',
@@ -77,14 +69,6 @@ var controller = {
         let idUsuario = decoded.user_id
         if (idUsuario != null) {
             Usuario.getUserById(idUsuario).then(usuario => {
-                // let datos = {
-                //     para: usuario.correo,
-                //     asunto: 'nose'
-                // }
-
-                // Email.send(datos).then(envio => {
-                //     console.log("se hizo el envio?")
-                // })
                 if (usuario != null) {
                     return res.status(200).send({
                         status: 'Success',
@@ -103,7 +87,92 @@ var controller = {
                 })
             })
         }
-    }
+    },
+    forgot: (req, res) => {
+        let user = req.body.user
+        Usuario.getUserByEmail(user).then(respuesta => {
+            if (respuesta != null) {
+                const payload = {
+                    user_id: respuesta.usua_id
+                };
+                const token = jwt.sign(payload, 'SecretPassword', {
+                    expiresIn: 10000
+                });
+
+                let datos = {
+                    to: user,
+                    subject: 'RECUPERAR PASSWORD',
+                    mail: config.url + '/forgot/reset/?token=' + token
+                }
+
+                Email.send(datos).then(envio => {
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Se ha enviado el correo satisfactoriamente.',
+                        token: token
+                    })
+                }).catch(err => {
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Ocurrió un error enviando correo.',
+                        token: token
+                    })
+                })
+            } else {
+                return res.status(200).send({
+                    status: 'Success',
+                    message: 'No se encontro el usuario.'
+                })
+            }
+        }).catch(error => {
+            return res.status(404).send({
+                status: 'Error',
+                message: 'Ha ocurrido un error.'
+            })
+        })
+    },
+    reset: (req, res) => {
+        let token = req.headers['authorization']
+        let newPassword = req.body.password
+        token = token.replace('Bearer ', '')
+
+        try {
+            let decoded = jwt.verify(token, 'SecretPassword');
+            let idUsuario = decoded.user_id
+            bcrypt.hash(newPassword, saltRounds, function (err, hash) {
+                let campos = {
+                    usua_id: idUsuario,
+                    password: hash
+                }
+                Usuario.updatePasswordByUserId(campos).then(usuario => {
+                    console.log("updatePasswordByUserId ", usuario)
+                    if (usuario != null) {
+                        return res.status(200).send({
+                            status: 'Success',
+                            message: 'Great'
+                        })
+                    } else {
+                        return res.status(404).send({
+                            status: 'Error',
+                            message: 'Not found'
+                        })
+                    }
+                }).catch(err => {
+                    return res.status(404).send({
+                        status: 'Error',
+                        message: 'Not found'
+                    })
+                })
+
+            });
+        } catch (err) {
+            return res.status(200).send({
+                status: 'Error',
+                message: 'Expired token'
+            })
+        }
+
+    },
 
 }
 

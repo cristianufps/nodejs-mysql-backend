@@ -4,8 +4,7 @@
     "password": "12345678",
     "database": "convenio",
     "host": "localhost",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "url": "http://localhost:3000"
   },
   "test": {
     "username": "root",
