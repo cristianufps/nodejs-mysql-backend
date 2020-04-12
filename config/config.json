@@ -1,16 +1,10 @@
 {
     "development": {
-        "username": "root",
+        "username": "edinsonac",
         "password": "12345678",
         "database": "convenio",
-        "host": "localhost",
+        "host": "35.192.198.146",
         "url": "http://localhost:3000"
-    },
-    "test": {
-        "username": "root",
-        "password": null,
-        "database": "convenio",
-        "host": "127.0.0.1"
     },
     "production": {
         "username": "edinsonac",
