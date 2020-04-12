@@ -57,6 +57,7 @@ var controller = {
                 })
             }
         }).catch(error => {
+            console.log("Error -->>>>>>>>>> ", error)
             return res.status(404).send({
                 status: 'Error',
                 message: 'No login'
