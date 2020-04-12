@@ -12,14 +12,16 @@ var controller = {
     login: (req, res) => {
         let user = req.body.user
         let pass = req.body.password
+        console.log("AUTH >> US ", user)
+        console.log("AUTH >> PASS ", pass)
         Usuario.getUserByEmail(user).then(respuesta => {
             if (respuesta != null) {
                 usuarioRegistrado = respuesta
-                //consultar password 
+                    //consultar password 
                 Usuario.getPasswordById(respuesta.usua_id).then(password => {
                     if (password != null) {
                         let hash = password.aute_password
-                        bcrypt.compare(pass, hash, function (err, result) {
+                        bcrypt.compare(pass, hash, function(err, result) {
                             if (result) {
                                 const payload = {
                                     user_id: usuarioRegistrado.usua_id
@@ -140,7 +142,7 @@ var controller = {
         try {
             let decoded = jwt.verify(token, 'SecretPassword');
             let idUsuario = decoded.user_id
-            bcrypt.hash(newPassword, saltRounds, function (err, hash) {
+            bcrypt.hash(newPassword, saltRounds, function(err, hash) {
                 let campos = {
                     usua_id: idUsuario,
                     password: hash
