@@ -6,7 +6,7 @@ const config = require(__dirname + '/../config/config.json')[env];
 
 exports.getConnection = () => {
     return mysql.createConnection({
-        host: config.host,
+        socketPath: config.socketpatch,
         user: config.username,
         password: config.password,
         database: config.database
