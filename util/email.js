@@ -3,8 +3,8 @@ exports.send = async(campos, fn) => {
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'meideyy@gmail.com',
-            pass: 'sindromedepeterpan1'
+            user: 'ufpsconvenios@gmail.com',
+            pass: 'UFPS.@2021'
         },
         tls: {
             rejectUnauthorized: false
