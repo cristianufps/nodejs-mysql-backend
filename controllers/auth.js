@@ -116,6 +116,7 @@ var controller = {
                         token: token
                     })
                 }).catch(err => {
+                    console.log("ERROR ENVIO -->> ", err)
                     return res.status(200).send({
                         status: 'Success',
                         message: 'Ocurrió un error enviando correo.',

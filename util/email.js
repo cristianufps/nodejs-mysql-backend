@@ -5,9 +5,6 @@ exports.send = async(campos, fn) => {
         auth: {
             user: 'meideyy@gmail.com',
             pass: 'sindromedepeterpan1'
-        },
-        tls: {
-            rejectUnauthorized: false
         }
     });
     let info = await transporter.sendMail({
