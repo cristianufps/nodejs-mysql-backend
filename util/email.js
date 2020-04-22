@@ -5,6 +5,9 @@ exports.send = async(campos, fn) => {
         auth: {
             user: 'meideyy@gmail.com',
             pass: 'sindromedepeterpan1'
+        },
+        tls: {
+            rejectUnauthorized: false
         }
     });
     let info = await transporter.sendMail({
@@ -16,12 +19,12 @@ exports.send = async(campos, fn) => {
         },
         function(error, info) {
             if (error) {
+                console.log("ERROR MAIL", error);
                 return { message: "Mail error", status: 'fail', aplicated: 'false' };
             } else {
                 return { message: "success", status: 'ok', aplicated: 'true' };
             }
         }
     );
-    console.log("Message sent: %s", info.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }

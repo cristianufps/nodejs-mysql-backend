@@ -11,6 +11,7 @@
         "password": "12345678",
         "database": "convenio",
         "host": "35.192.198.146",
-        "socketpatch": "/cloudsql/convenio-273922:us-central1:convenio"
+        "socketpatch": "/cloudsql/convenio-273922:us-central1:convenio",
+        "url": "https://nuxt-convenio.rj.r.appspot.com"
     }
 }
