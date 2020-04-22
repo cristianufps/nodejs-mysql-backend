@@ -1,12 +1,5 @@
 var nodemailer = require('nodemailer');
-// email sender function
-
 exports.send = async(campos, fn) => {
-    // Generate test SMTP service account from ethereal.email
-    // Only needed if you don't have a real mail account for testing
-    // let testAccount = await nodemailer.createTestAccount();
-
-    // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         service: 'Gmail',
@@ -20,20 +13,21 @@ exports.send = async(campos, fn) => {
             rejectUnauthorized: false
         }
     });
-
-    // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: campos.to, // list of receivers
-        subject: campos.subject, // Subject line
-        text: campos.mail, // plain text body
-        // html: "<b>Si le llega esto es porque soy crack :D </b>" // html body
-    });
-
+            from: '"Fred Foo 👻" <foo@example.com>', // sender address
+            to: campos.to, // list of receivers
+            subject: campos.subject, // Subject line
+            text: campos.mail, // plain text body
+            // html: "<b>Si le llega esto es porque soy crack :D </b>" // html body
+        },
+        function(error, info) {
+            if (error) {
+                return { message: "Mail error", status: 'fail', aplicated: 'false' };
+            } else {
+                return { message: "success", status: 'ok', aplicated: 'true' };
+            }
+        }
+    );
     console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
