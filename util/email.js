@@ -1,14 +1,14 @@
 var nodemailer = require('nodemailer');
 // email sender function
 
-exports.send = async (campos, fn) => {
+exports.send = async(campos, fn) => {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
     // let testAccount = await nodemailer.createTestAccount();
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
+        host: "smtp.gmail.com",
         service: 'Gmail',
         port: 587,
         secure: false, // true for 465, false for other ports
