@@ -92,6 +92,7 @@ var controller = {
         }
     },
     forgot: (req, res) => {
+        console.log("FORGOT >> US ", user)
         let user = req.body.user
         Usuario.getUserByEmail(user).then(respuesta => {
             if (respuesta != null) {
