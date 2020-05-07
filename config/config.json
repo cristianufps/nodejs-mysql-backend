@@ -3,7 +3,7 @@
         "username": "edinsonac",
         "password": "12345678",
         "database": "convenio",
-        "host": "35.192.198.146",
+        "host": "localhost",
         "url": "http://localhost:3000"
     },
     "production": {

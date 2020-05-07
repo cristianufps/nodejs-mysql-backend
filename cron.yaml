@@ -1,0 +1,5 @@
+# cron:
+# - description: "monday morning mailout"
+#   url: /mail/weekly
+#   schedule: every monday 09:00
+#   timezone: America/Bogota

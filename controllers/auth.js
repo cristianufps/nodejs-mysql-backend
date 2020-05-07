@@ -100,7 +100,7 @@ var controller = {
                     user_id: respuesta.usua_id
                 };
                 const token = jwt.sign(payload, 'SecretPassword', {
-                    expiresIn: 10000
+                    expiresIn: 20000
                 });
 
                 let datos = {
