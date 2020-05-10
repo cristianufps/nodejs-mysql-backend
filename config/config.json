@@ -1,6 +1,6 @@
 {
     "development": {
-        "username": "edinsonac",
+        "username": "root",
         "password": "12345678",
         "database": "convenio",
         "host": "localhost",

@@ -9,6 +9,7 @@ router.post('/login', authController.login)
 router.post('/forgot', authController.forgot)
 router.get('/me', authController.me)
 router.post('/reset', authController.reset)
+router.get('/validate_password/:id/:password', authController.validatePassword)
+router.put('/update_password/:id', authController.updatePass)
 
 module.exports = router
-

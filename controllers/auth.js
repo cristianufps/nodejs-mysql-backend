@@ -179,7 +179,87 @@ var controller = {
         }
 
     },
+    validatePassword: (req, res) => {
+        let actualPassword = req.params.password
+        let idUser = req.params.id
 
+        Usuario.getPasswordById(idUser).then(password => {
+            if (password != null) {
+                let hash = password.aute_password
+                bcrypt.compare(actualPassword, hash, function(err, result) {
+                    if (result) {
+                        return res.status(200).send({
+                            status: 'success',
+                            message: 'La contraseña coincide',
+                            response: true
+                        })
+                    } else {
+                        return res.status(200).send({
+                            status: 'success',
+                            message: 'Password incorrecta',
+                            response: false
+                        })
+                    }
+                });
+            }
+        }).catch(error => {
+            return res.status(401).send({
+                status: 'Error',
+                message: 'No se encontró la contraseña'
+            })
+        })
+    },
+    updatePass: (req, res) => {
+        let actualPassword = req.body.actualPassword
+        let idUser = req.params.id
+        let newPassword = req.body.newPassword
+
+        Usuario.getPasswordById(idUser).then(password => {
+            if (password != null) {
+                let hash = password.aute_password
+                bcrypt.compare(actualPassword, hash, function(err, result) {
+                    if (result) {
+                        bcrypt.hash(newPassword, saltRounds, function(err, hash) {
+                            let campos = {
+                                usua_id: idUser,
+                                password: hash
+                            }
+                            Usuario.updatePasswordByUserId(campos).then(usuario => {
+                                if (usuario != null) {
+                                    return res.status(200).send({
+                                        status: 'Success',
+                                        message: 'Se ha establecido la contraseña con éxito.'
+                                    })
+                                } else {
+                                    return res.status(404).send({
+                                        status: 'Error',
+                                        message: 'No se ha podido actualizar la contraseña'
+                                    })
+                                }
+                            }).catch(err => {
+                                return res.status(404).send({
+                                    status: 'Error',
+                                    message: 'Not found'
+                                })
+                            })
+
+                        });
+                    } else {
+                        return res.status(200).send({
+                            status: 'success',
+                            message: 'Password incorrecta',
+                            response: false
+                        })
+                    }
+                });
+            }
+        }).catch(error => {
+            return res.status(401).send({
+                status: 'Error',
+                message: 'No se encontró la contraseña'
+            })
+        })
+    },
 }
 
 module.exports = controller
