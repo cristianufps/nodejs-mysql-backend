@@ -36,6 +36,20 @@ var controller = {
         })
     },
 
+    update_user: (req, res) => {
+        console.log("update_user ", req.body.user)
+        let user = req.body.user
+        Usuario.updateProfile(user).then(respuesta => {
+            return res.status(200).send({
+                status: 'success',
+            })
+        }).catch(err => {
+            return res.status(404).send({
+                status: 'Error',
+                message: 'Se ha producido un error editando el perfil.'
+            })
+        })
+    },
 }
 
 module.exports = controller

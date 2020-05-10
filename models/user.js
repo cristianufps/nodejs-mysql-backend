@@ -1,8 +1,7 @@
-
 'use strict';
 
 const db = require('../config/bd')
-exports.getUsers = async (campos, fn) => {
+exports.getUsers = async(campos, fn) => {
     try {
         const con = await db.getConnection();
         const rows = await con.query('SELECT * FROM usuario');
@@ -10,13 +9,12 @@ exports.getUsers = async (campos, fn) => {
             return [];
         }
         return rows;
-    }
-    catch (e) {
+    } catch (e) {
         throw e;
     }
 }
 
-exports.getUserById = async (campos, fn) => {
+exports.getUserById = async(campos, fn) => {
 
     try {
         const con = await db.getConnection();
@@ -25,13 +23,12 @@ exports.getUserById = async (campos, fn) => {
             throw new Error('no existe');
         }
         return rows[0];
-    }
-    catch (e) {
+    } catch (e) {
         throw e;
     }
 }
 
-exports.getUserByEmail = async (campos, fn) => {
+exports.getUserByEmail = async(campos, fn) => {
 
     try {
         const con = await db.getConnection();
@@ -40,13 +37,12 @@ exports.getUserByEmail = async (campos, fn) => {
             throw new Error('no existe');
         }
         return rows[0];
-    }
-    catch (e) {
+    } catch (e) {
         throw e;
     }
 }
 
-exports.getPasswordById = async (campos, fn) => {
+exports.getPasswordById = async(campos, fn) => {
     try {
         const con = await db.getConnection();
         const rows = await con.query('SELECT * FROM autenticacion WHERE usua_id = ? limit 1', [campos]);
@@ -54,14 +50,13 @@ exports.getPasswordById = async (campos, fn) => {
             throw new Error('no existe');
         }
         return rows[0];
-    }
-    catch (e) {
+    } catch (e) {
         throw e;
     }
 }
 
 
-exports.updatePasswordByUserId = async (campos, fn) => {
+exports.updatePasswordByUserId = async(campos, fn) => {
 
     try {
         const con = await db.getConnection();
@@ -72,8 +67,24 @@ exports.updatePasswordByUserId = async (campos, fn) => {
             throw new Error('no existe');
         }
         return rows;
+    } catch (e) {
+        throw e;
     }
-    catch (e) {
+}
+
+
+exports.updateProfile = async(campos, fn) => {
+
+    try {
+        const con = await db.getConnection();
+        let query = 'UPDATE usuario SET usua_nombres = ?, usua_apellidos = ?, usua_documento = ?, ' +
+            'usua_celular = ?, usua_direccion = ?, usua_correo = ?  WHERE usua_id = ? '
+        const rows = await con.query(query, [campos.usua_nombres, campos.usua_apellidos, campos.usua_documento, campos.usua_celular, campos.usua_direccion, campos.usua_correo, campos.usua_id]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows;
+    } catch (e) {
         throw e;
     }
 }
