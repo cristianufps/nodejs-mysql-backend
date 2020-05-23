@@ -37,7 +37,6 @@ var controller = {
     },
 
     update_user: (req, res) => {
-        console.log("update_user ", req.body.user)
         let user = req.body.user
         Usuario.updateProfile(user).then(respuesta => {
             return res.status(200).send({
@@ -50,6 +49,40 @@ var controller = {
             })
         })
     },
+
+    uploadImage: (req, res, next) => {
+
+        // Was an image uploaded? If so, we'll use its public URL
+        // in cloud storage.
+        if (req.file && req.file.cloudStoragePublicUrl) {
+            let imageUrl = req.file.cloudStoragePublicUrl;
+            let name = req.file.cloudStorageObject
+
+            name = name.split("/")[1]
+
+            let user = {
+                usua_id: req.params.id,
+                usua_imgperfil: name
+            }
+            Usuario.updateImageProfile(user).then(respuesta => {
+                return res.status(200).send({
+                    status: 'success',
+                    message: 'Se ha cargado la imagen con éxito',
+                    url: name
+                })
+            }).catch(err => {
+                return res.status(404).send({
+                    status: 'Error',
+                    message: 'Se ha producido un error editando el usuario.'
+                })
+            })
+        } else {
+            return res.status(404).send({
+                status: "Error",
+                message: 'Ha ocurrido un error subiendo la imagen'
+            })
+        }
+    }
 }
 
 module.exports = controller

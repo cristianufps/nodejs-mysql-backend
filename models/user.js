@@ -88,3 +88,18 @@ exports.updateProfile = async(campos, fn) => {
         throw e;
     }
 }
+
+exports.updateImageProfile = async(campos, fn) => {
+
+    try {
+        const con = await db.getConnection();
+        let query = 'UPDATE usuario SET usua_imgperfil = ? WHERE usua_id = ? '
+        const rows = await con.query(query, [campos.usua_imgperfil, campos.usua_id]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}

@@ -2,16 +2,20 @@
     "development": {
         "username": "root",
         "password": "12345678",
-        "database": "convenio",
+        "database": "swac",
         "host": "localhost",
-        "url": "http://localhost:3000"
+        "url": "http://localhost:3000",
+        "CLOUD_BUCKET": "convenio-273922.appspot.com",
+        "GCLOUD_PROJECT": "convenio-273922"
     },
     "production": {
         "username": "edinsonac",
         "password": "12345678",
-        "database": "convenio",
+        "database": "swac",
         "host": "35.192.198.146",
         "socketpatch": "/cloudsql/convenio-273922:us-central1:convenio",
-        "url": "https://nuxt-convenio.rj.r.appspot.com"
+        "url": "https://nuxt-convenio.rj.r.appspot.com",
+        "CLOUD_BUCKET": "convenio-273922.appspot.com",
+        "GCLOUD_PROJECT": "convenio-273922"
     }
 }

@@ -28,7 +28,7 @@ var controller = {
                                 };
                                 //recordar hacer password mas seguro
                                 const token = jwt.sign(payload, 'SecretPassword', {
-                                    expiresIn: 3600
+                                    expiresIn: 7200
                                 });
                                 return res.status(200).send({
                                     status: 'success',
@@ -92,7 +92,6 @@ var controller = {
         }
     },
     forgot: (req, res) => {
-        console.log("FORGOT >> US ", req.body.user)
         let user = req.body.user
         Usuario.getUserByEmail(user).then(respuesta => {
             if (respuesta != null) {

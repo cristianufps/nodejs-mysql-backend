@@ -1,0 +1,12 @@
+{
+    "type": "service_account",
+    "project_id": "convenio-273922",
+    "private_key_id": "6f99368fff364d39aa1bc5a41de4580994b9aeb5",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCKUuCnipqJOZq5\nky1rI8sq+OluWIuui02qdAolazHwstpYakgNXVHLxgZ5V+GivFWkwY84ZEnca3uQ\nlaYdD0tcgnYHq+ihCt3YasxulkFOR9zDpTHsWK9V7/A1DoAgLQyuPwnTkU9xgeD3\nn91Ci0C7/w2RTHzwOgecZ0neisxchdI8CuSmSccFioDVMH05q3idYh+4lAL2Xr3D\n0fx0uaJgUgW1LGa4swaNm1p2dJeHp9AX3miKbJ4KI3zWXSxfI4cxAelaGLRY2mbo\ngUqZqLZtmvy9yH0CzT/07dcBnZE5TLTHQa4eGHWE1iTauSjny8e0o/diUYIx5TmO\nYucUdzITAgMBAAECggEAKLpDVIFuhAYWhRqNLnUxDnuQu8FNi3yPxyb4j9DyuOTo\nfkz43xqBiYbKhDL4iEJ80xB824VH7CMnlEhDy12j+l6dYx/eVICPFnhHri4Gl4Z4\nPZDn1Ke+JIcLyot09URebfW4rnckFY9Azphe/QdkbZYpCAWl6dOkRwxwhxqGFp2P\nk65oiqa+muoOYuj755ob/I4x+PbfInCw1aJsLgsR2gD5mc1m5FlNUfw8awdOYbv6\nUCnD7OzQj8M4/zbsOOTEnI0bcvDCea5NHdJJqRXzq+pt55VPQv4Qo1OSvECycFM6\nT181R21FQjmzvrcpg1Ay7A3I00d/QpZdPOYowXEGLQKBgQDAkq6mPu5oLSJeBjB2\nGo8Zn6ikWen/mOhOvduqJsB7T6z2ZpvzfSrcEq6n022lCa/6CPX61RTb29F30p7G\nyNwamyw0JMIwZcYpPAcoo+JsLZ+DL2Na9cfThViJZ3mcW0Vfz7FMylTHf0anqo4h\ndcvZJwlVaGFYyyHjZixNBOsr9wKBgQC34gW8T2S/IfLGcKElrGntP0yYcQirXq97\nuMevXuDXxO15dNND2p9/7vsFO0QCGYjmV1fC2epxA7em6I+5vxnCoOqLCib4BuOf\nDlVMS65pzL8v2LZGICJUc4HhQyUwEceXKOHtpZX3kMLq54wymiDo3XJX7yyyaxYY\npIsJDgtLxQKBgFvEyuPAc55De/AwpOFzUKRWWGhRzNgYBwSXJ1oTc4CP/I3DYigL\niuQrJv4lHEgcsLbHlGj/KByJyW1/eliimXk4Xz1OExg7N86oo4SzbJA+wZgjegZ7\nv8lF72YzYFmpiQraj9RXS0VymroF5gt99jG6j5Ea1+EXlEOoig39/RALAoGBAI63\nZP43nJjfz16G8fucaoZRd7BlInZnQcnDq3AIMnglBq8aphHm755KrBbuXaVHjkJA\njgPUQCpA2Vw46bwffu3ZGNCbK42bQzUi2b8iihbha43GJAofTKXBFI/yHj3FvuQq\nPdfFibSgbTgGSIDJsTsrDGEFZ+p+RKMRqjt34/qFAoGAHzJbb8oZWlvfATZkYn1M\n0B8KhG3Xdc3njNTvQ0Qqt/h5SBNDvaXfyD/SPYJslL6xzkKu2hkhV6rtujpiQQ5B\nSCN+DzOFjRUaG6ayNFarI3DZjdSFJnBrLRBo0FKhedmBzHfjBQMcToTEfkWVWqGn\n/WjL3gKkNThygNtYYLgsDuw=\n-----END PRIVATE KEY-----\n",
+    "client_email": "files-nuxt-convenios@convenio-273922.iam.gserviceaccount.com",
+    "client_id": "105215930355366010896",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/files-nuxt-convenios%40convenio-273922.iam.gserviceaccount.com"
+}
