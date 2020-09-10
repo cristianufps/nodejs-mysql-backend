@@ -1,5 +1,5 @@
-# cron:
-# - description: "monday morning mailout"
-#   url: /mail/weekly
-#   schedule: every monday 09:00
-#   timezone: America/Bogota
+cron:
+- description: "Alerta temprana"
+  url: /cron
+  schedule: every day 17:40
+  timezone: America/Bogota

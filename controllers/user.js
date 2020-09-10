@@ -51,7 +51,6 @@ var controller = {
     },
 
     uploadImage: (req, res, next) => {
-
         // Was an image uploaded? If so, we'll use its public URL
         // in cloud storage.
         if (req.file && req.file.cloudStoragePublicUrl) {

@@ -16,14 +16,13 @@ async function sendUploadToGCS(req, res, next) {
         keyFilename: path.join(__dirname, '/../config/gcloud.json')
     });
     const bucket = await storage.bucket(CLOUD_BUCKET);
-
     if (!req.file) {
         return next();
     }
 
-    const gcsname = 'imagenes_perfil/' + req.file.originalname;
+    let imgName = "img_" + req.params.id + "." + req.file.originalname.split('.')[1]
+    const gcsname = 'imagenes_perfil/' + imgName;
     const file = bucket.file(gcsname);
-
     const stream = file.createWriteStream({
         metadata: {
             contentType: req.file.mimetype
@@ -35,7 +34,6 @@ async function sendUploadToGCS(req, res, next) {
         req.file.cloudStorageError = err;
         next(err);
     });
-
     stream.on('finish', () => {
         req.file.cloudStorageObject = gcsname;
         file.makePublic().then(() => {
@@ -47,7 +45,6 @@ async function sendUploadToGCS(req, res, next) {
     stream.end(req.file.buffer);
 }
 // [END process]
-
 // Multer handles parsing multipart/form-data requests.
 // This instance is configured to store images in memory.
 // This makes it straightforward to upload to Cloud Storage.
@@ -60,7 +57,6 @@ const multer = Multer({
     }
 });
 // [END multer]
-
 module.exports = {
     getPublicUrl,
     sendUploadToGCS,

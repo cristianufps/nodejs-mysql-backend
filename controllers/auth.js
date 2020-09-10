@@ -99,13 +99,13 @@ var controller = {
                     user_id: respuesta.usua_id
                 };
                 const token = jwt.sign(payload, 'SecretPassword', {
-                    expiresIn: 20000
+                    expiresIn: 18000
                 });
 
                 let datos = {
                     to: user,
                     subject: 'RECUPERAR PASSWORD',
-                    mail: config.url + '/forgot/reset/?token=' + token
+                    mail: 'Ingrese al siguiente link para establecer una contraseña, solo esta disponible por 5 horas ' + config.url + '/forgot/reset/?token=' + token
                 }
 
                 Email.send(datos).then(envio => {

@@ -103,3 +103,16 @@ exports.updateImageProfile = async(campos, fn) => {
         throw e;
     }
 }
+
+exports.getEmailUsersAdmin = async(campos, fn) => {
+    try {
+        const con = await db.getConnection();
+        const rows = await con.query('SELECT usua_correo FROM usuario WHERE tius_id = 1');
+        if (!rows) {
+            return [];
+        }
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}
