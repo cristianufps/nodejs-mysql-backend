@@ -7,94 +7,113 @@ var Email = require('../util/email')
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 var usuarioRegistrado = null
+const db = require('../config/bd')
 
 var controller = {
-    login: (req, res) => {
+    login: async(req, res, next) => {
+        let con = await db.getConnection();
         let user = req.body.user
         let pass = req.body.password
+        let token
         console.log("AUTH >> US ", user)
         console.log("AUTH >> PASS ", pass)
-        Usuario.getUserByEmail(user).then(respuesta => {
-            if (respuesta != null) {
-                usuarioRegistrado = respuesta
-                    //consultar password 
-                Usuario.getPasswordById(respuesta.usua_id).then(password => {
-                    if (password != null) {
-                        let hash = password.aute_password
-                        bcrypt.compare(pass, hash, function(err, result) {
-                            if (result) {
-                                const payload = {
-                                    user_id: usuarioRegistrado.usua_id
-                                };
-                                //recordar hacer password mas seguro
-                                const token = jwt.sign(payload, 'SecretPassword', {
-                                    expiresIn: 7200
-                                });
-                                return res.status(200).send({
-                                    status: 'success',
-                                    message: 'Se ha logueado',
-                                    token: token
-                                })
-                            } else {
-                                return res.status(401).send({
-                                    status: 'success',
-                                    message: 'Password incorrecta'
-                                })
-                            }
 
-                        });
-                    }
-                }).catch(error => {
-                    return res.status(401).send({
-                        status: 'Error',
-                        message: 'No se encontró la contraseña'
+        try {
+            let userResp = await Usuario.getUserByEmail(con, user);
+            if (userResp != null) {
+                let password = await Usuario.getPasswordById(con, userResp.usua_id)
+                if (password != null) {
+                    let hash = password.aute_password
+                    bcrypt.compare(pass, hash, function(err, result) {
+                        if (result) {
+                            const payload = {
+                                user_id: userResp.usua_id
+                            };
+                            //recordar hacer password mas seguro
+                            token = jwt.sign(payload, 'SecretPassword', {
+                                expiresIn: 7200
+                            });
+                            return res.status(200).send({
+                                status: 'success',
+                                message: 'Se ha logueado',
+                                token: token
+                            })
+                        } else {
+                            return res.status(400).send({
+                                status: 'error',
+                                message: 'No login',
+                            })
+                        }
+                    });
+                } else {
+                    return res.status(400).send({
+                        status: 'error',
+                        message: 'No login',
                     })
-                })
-            } else {
-                return res.status(404).send({
-                    status: 'Error',
-                    message: 'No se encontro el usuario'
-                })
+                }
             }
-        }).catch(error => {
-            console.log("Error -->>>>>>>>>> ", error)
-            return res.status(404).send({
-                status: 'Error',
-                message: 'No login'
+
+        } catch (error) {
+            next(error)
+            return res.status(400).send({
+                status: 'error',
+                message: 'No login',
+                error: error
             })
-        })
+        } finally {
+            console.log("--------- FINALLY --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
+
     },
 
-    me: (req, res) => {
+    me: async(req, res, next) => {
+        var con = await db.getConnection();
         let token = req.headers['authorization']
         token = token.replace('Bearer ', '')
-        let decoded = jwt.verify(token, 'SecretPassword');
-        let idUsuario = decoded.user_id
-        if (idUsuario != null) {
-            Usuario.getUserById(idUsuario).then(usuario => {
-                if (usuario != null) {
+        let user
+
+        try {
+            let decoded = jwt.verify(token, 'SecretPassword');
+            console.log("decoded ----->> ", decoded)
+            let idUsuario = decoded.user_id
+            if (idUsuario != null) {
+                user = await Usuario.getUserById(con, idUsuario)
+                if (user != null) {
                     return res.status(200).send({
                         status: 'Success',
-                        user: usuario
+                        user: user
                     })
                 } else {
                     return res.status(404).send({
                         status: 'Error',
-                        message: 'Not found'
+                        message: 'Not found user'
                     })
                 }
-            }).catch(err => {
-                return res.status(404).send({
-                    status: 'Error',
-                    message: 'Not found'
-                })
+
+            }
+        } catch (error) {
+            next(error)
+            return res.status(404).send({
+                status: 'Error',
+                message: 'Not found'
             })
+        } finally {
+            console.log("--------- FINALLY ME --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
         }
     },
-    forgot: (req, res) => {
+    forgot: async(req, res, next) => {
+        var con = await db.getConnection();
         let user = req.body.user
-        Usuario.getUserByEmail(user).then(respuesta => {
-            if (respuesta != null) {
+
+        try {
+            let response = await Usuario.getUserByEmail(con, user)
+            if (response) {
                 const payload = {
                     user_id: respuesta.usua_id
                 };
@@ -107,7 +126,6 @@ var controller = {
                     subject: 'RECUPERAR PASSWORD',
                     mail: 'Ingrese al siguiente link para establecer una contraseña, solo esta disponible por 5 horas ' + config.url + '/forgot/reset/?token=' + token
                 }
-
                 Email.send(datos).then(envio => {
                     return res.status(200).send({
                         status: 'Success',
@@ -122,20 +140,21 @@ var controller = {
                         token: token
                     })
                 })
-            } else {
-                return res.status(200).send({
-                    status: 'Success',
-                    message: 'No se encontro el usuario.'
-                })
             }
-        }).catch(error => {
+        } catch (error) {
+            next(error)
             return res.status(404).send({
                 status: 'Error',
                 message: 'Ha ocurrido un error.'
             })
-        })
+        } finally {
+            console.log("--------- FINALLY forgot --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
     },
-    reset: (req, res) => {
+    reset: (req, res, next) => {
         let token = req.headers['authorization']
         let newPassword = req.body.password
         token = token.replace('Bearer ', '')
@@ -171,6 +190,7 @@ var controller = {
 
             });
         } catch (err) {
+            next(error)
             return res.status(200).send({
                 status: 'Error',
                 message: 'Expired token'
@@ -178,13 +198,15 @@ var controller = {
         }
 
     },
-    validatePassword: (req, res) => {
+    validatePassword: async(req, res) => {
+        let con = await db.getConnection();
         let actualPassword = req.params.password
         let idUser = req.params.id
 
-        Usuario.getPasswordById(idUser).then(password => {
-            if (password != null) {
-                let hash = password.aute_password
+        try {
+            let pass = await Usuario.getPasswordById(con, idUser)
+            if (pass != null) {
+                let hash = pass.aute_password
                 bcrypt.compare(actualPassword, hash, function(err, result) {
                     if (result) {
                         return res.status(200).send({
@@ -201,63 +223,62 @@ var controller = {
                     }
                 });
             }
-        }).catch(error => {
-            return res.status(401).send({
+        } catch (error) {
+            return res.status(404).send({
                 status: 'Error',
                 message: 'No se encontró la contraseña'
             })
-        })
+        } finally {
+            console.log("--------- FINALLY validatePassword --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
     },
-    updatePass: (req, res) => {
+    updatePass: async(req, res) => {
+        let con = await db.getConnection();
         let actualPassword = req.body.actualPassword
         let idUser = req.params.id
         let newPassword = req.body.newPassword
-
-        Usuario.getPasswordById(idUser).then(password => {
-            if (password != null) {
-                let hash = password.aute_password
-                bcrypt.compare(actualPassword, hash, function(err, result) {
-                    if (result) {
-                        bcrypt.hash(newPassword, saltRounds, function(err, hash) {
-                            let campos = {
-                                usua_id: idUser,
-                                password: hash
-                            }
-                            Usuario.updatePasswordByUserId(campos).then(usuario => {
-                                if (usuario != null) {
-                                    return res.status(200).send({
-                                        status: 'Success',
-                                        message: 'Se ha establecido la contraseña con éxito.'
-                                    })
-                                } else {
-                                    return res.status(404).send({
-                                        status: 'Error',
-                                        message: 'No se ha podido actualizar la contraseña'
-                                    })
-                                }
-                            }).catch(err => {
-                                return res.status(404).send({
-                                    status: 'Error',
-                                    message: 'Not found'
-                                })
-                            })
-
-                        });
-                    } else {
-                        return res.status(200).send({
-                            status: 'success',
-                            message: 'Password incorrecta',
-                            response: false
-                        })
+        let campos
+        try {
+            let pass = await Usuario.getPasswordById(con, idUser)
+            if (pass) {
+                let hash = pass.aute_password
+                let prob = await bcrypt.compare(actualPassword, hash);
+                if (prob) {
+                    let change = await bcrypt.hash(newPassword, saltRounds)
+                    if (change) {
+                        campos = {
+                            usua_id: idUser,
+                            password: change
+                        }
                     }
-                });
+                }
+                let us = await Usuario.updatePasswordByUserId(con, campos)
+                if (us != null) {
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Se ha establecido la contraseña con éxito.'
+                    })
+                } else {
+                    return res.status(404).send({
+                        status: 'Error',
+                        message: 'No se ha podido actualizar la contraseña'
+                    })
+                }
             }
-        }).catch(error => {
-            return res.status(401).send({
+        } catch (error) {
+            return res.status(404).send({
                 status: 'Error',
-                message: 'No se encontró la contraseña'
+                message: 'Not found'
             })
-        })
+        } finally {
+            console.log("--------- FINALLY updatePass --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
     },
 }
 

@@ -1,10 +1,10 @@
 'use strict';
 
 const db = require('../config/bd')
-exports.updateAgreement = async(campos, fn) => {
+exports.updateAgreement = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'UPDATE convenio SET conv_nombre = ?, conv_descripcion = ?, cate_id = ?, conv_fechainicial = ?, ' +
             'conv_fechafinal = ?, conv_costo = ?  WHERE conv_id = ? '
         const rows = await con.query(query, [
@@ -26,10 +26,10 @@ exports.updateAgreement = async(campos, fn) => {
     }
 }
 
-exports.insertAgreement = async(campos, fn) => {
+exports.insertAgreement = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'INSERT INTO convenio (conv_nombre,conv_descripcion,tico_id,cate_id,empr_id,conv_padre,conv_fechainicial,conv_fechafinal,conv_costo) ' +
             'VALUES(?,?,?,?,?,?,?,?,?)'
         const rows = await con.query(query, [
@@ -52,9 +52,9 @@ exports.insertAgreement = async(campos, fn) => {
     }
 }
 
-exports.getAgreements = async(campos, fn) => {
+exports.getAgreements = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM convenio c ' +
             'INNER JOIN tipo_convenio t ON  c.tico_id = t.tico_id ' +
             'INNER JOIN empresa e ON e.empr_id = c.empr_id ');
@@ -68,10 +68,10 @@ exports.getAgreements = async(campos, fn) => {
 }
 
 
-exports.getAgreementById = async(campos, fn) => {
+exports.getAgreementById = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM convenio WHERE conv_id = ? limit 1', [campos]);
         if (!rows) {
             throw new Error('no existe');
@@ -82,9 +82,9 @@ exports.getAgreementById = async(campos, fn) => {
     }
 }
 
-exports.getAgreementsParents = async(campos, fn) => {
+exports.getAgreementsParents = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM convenio c ' +
             'INNER JOIN tipo_convenio t ON  c.tico_id = t.tico_id ' +
             'INNER JOIN empresa e ON e.empr_id = c.empr_id ' +
@@ -98,10 +98,10 @@ exports.getAgreementsParents = async(campos, fn) => {
     }
 }
 
-exports.uploadDocument = async(campos, fn) => {
+exports.uploadDocument = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'UPDATE convenio SET conv_soporte = ?  WHERE conv_id = ? '
         const rows = await con.query(query, [
             campos.conv_soporte,
@@ -117,9 +117,9 @@ exports.uploadDocument = async(campos, fn) => {
     }
 }
 
-exports.getAgreementsAboutToExpire = async(campos, fn) => {
+exports.getAgreementsAboutToExpire = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM convenio WHERE YEAR(conv_fechafinal) = YEAR(CURRENT_DATE()) ' +
             'AND MONTH(conv_fechafinal)  = MONTH(CURRENT_DATE()) ');
         if (!rows) {
@@ -131,9 +131,9 @@ exports.getAgreementsAboutToExpire = async(campos, fn) => {
     }
 }
 
-exports.getAgreementsSpecific = async(campos, fn) => {
+exports.getAgreementsSpecific = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT c.conv_id,c.conv_nombre,emp.empr_nombre, c.conv_fechafinal,' +
             'IFNULL(padre.conv_nombre,"NO APLICA") AS padre_nombre ' +
             'FROM convenio c ' +
@@ -149,9 +149,9 @@ exports.getAgreementsSpecific = async(campos, fn) => {
     }
 }
 
-exports.getAgreementsExcel = async(campos, fn) => {
+exports.getAgreementsExcel = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT c.conv_nombre AS nombre, c.conv_fechainicial AS inicio, c.conv_fechafinal AS fin, ' +
             'ca.cate_nombre AS categorias ,t.tico_nombre AS tipo, e.empr_nombre AS organizacion, ' +
             'IFNULL(padre.conv_nombre,"NO APLICA") AS padre_nombre ' +

@@ -14,3 +14,10 @@ exports.getConnection = () => {
         database: config.database
     })
 }
+
+exports.endConnection = () => {
+    return mysql.end(function(err) {
+        // The connection is terminated now
+        console.log("Se cierra conexion")
+    });
+}

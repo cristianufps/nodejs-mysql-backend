@@ -1,66 +1,108 @@
 'use strict'
 
 var Categoria = require('../models/category')
-
+const db = require('../config/bd')
 var controller = {
 
-    create_category: (req, res) => {
+    create_category: async(req, res) => {
+        var con = await db.getConnection();
         let category = req.body.category
-        Categoria.insertCategory(category).then(respuesta => {
-            console.log("res insert --- -> ", respuesta.insertId)
-            return res.status(200).send({
-                status: 'success',
-                message: 'Se ha registrado la categoría con éxito.'
-            })
-        }).catch(err => {
+
+        try {
+            let respuesta = await Categoria.insertCategory(con, category)
+            if (respuesta) {
+                console.log("res insert --- -> ", respuesta.insertId)
+                return res.status(200).send({
+                    status: 'success',
+                    message: 'Se ha registrado la categoría con éxito.'
+                })
+            }
+        } catch (error) {
             return res.status(404).send({
                 status: 'Error',
                 message: 'Se ha producido un error registrando la categoria.'
             })
-        })
+        } finally {
+            console.log("--------- FINALLY create_category --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
+
     },
-    update_category: (req, res) => {
+    update_category: async(req, res) => {
+        var con = await db.getConnection();
         let category = req.body.category
         let idCategory = req.params.id
         category.cate_id = idCategory
-        Categoria.updateCategory(category).then(respuesta => {
-            return res.status(200).send({
-                status: 'success',
-                message: 'Se ha editado la categoría con éxito.'
-            })
-        }).catch(err => {
+
+        try {
+            let respuesta = await
+            Categoria.updateCategory(con, category)
+            if (respuesta) {
+                return res.status(200).send({
+                    status: 'success',
+                    message: 'Se ha editado la categoría con éxito.'
+                })
+            }
+
+        } catch (error) {
             return res.status(404).send({
                 status: 'Error',
                 message: 'Se ha producido un error editando la categoria.'
             })
-        })
+        } finally {
+            console.log("--------- FINALLY update_category --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
     },
-    list_category: (req, res) => {
-        Categoria.getCategories(req.body).then(respuesta => {
-            return res.status(200).send({
-                status: 'success',
-                data: respuesta
-            })
-        }).catch(err => {
+    list_category: async(req, res) => {
+        var con = await db.getConnection();
+        try {
+            let response = await Categoria.getCategories(con, req.body)
+            if (response) {
+                return res.status(200).send({
+                    status: 'success',
+                    data: response
+                })
+            }
+        } catch (error) {
             return res.status(404).send({
                 status: 'Error',
                 message: 'Se ha producido un error listando las categorias.'
             })
-        })
+        } finally {
+            console.log("--------- FINALLY list_category --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
     },
-    category_by_id: (req, res) => {
+    category_by_id: async(req, res) => {
+        var con = await db.getConnection();
         let id = req.params.id
-        Categoria.getCategoryById(id).then(respuesta => {
-            return res.status(200).send({
-                status: 'success',
-                data: respuesta
-            })
-        }).catch(err => {
+        try {
+            let response = await Categoria.getCategoryById(con, id)
+            if (response) {
+                return res.status(200).send({
+                    status: 'success',
+                    data: response
+                })
+            }
+        } catch (error) {
             return res.status(404).send({
                 status: 'Error',
                 message: 'Se ha producido un error listando las categorias.'
             })
-        })
+        } finally {
+            console.log("--------- FINALLY list_category --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
+
     },
 }
 

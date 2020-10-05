@@ -1,10 +1,10 @@
 'use strict';
 
 const db = require('../config/bd')
-exports.updateLegalRepresentant = async(campos, fn) => {
+exports.updateLegalRepresentant = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'UPDATE representante_legal SET rele_nombres = ?, rele_apellidos = ?, rele_documento = ?, ' +
             'rele_celular = ?, rele_correo = ?  WHERE rele_id = ? '
         const rows = await con.query(query, [
@@ -25,10 +25,10 @@ exports.updateLegalRepresentant = async(campos, fn) => {
     }
 }
 
-exports.insertLegalRepresentant = async(campos, fn) => {
+exports.insertLegalRepresentant = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'INSERT INTO representante_legal (rele_nombres,rele_apellidos,rele_documento,rele_celular,rele_correo) ' +
             'VALUES(?,?,?,?,?)'
         const rows = await con.query(query, [
@@ -47,9 +47,9 @@ exports.insertLegalRepresentant = async(campos, fn) => {
     }
 }
 
-exports.getLegalRepresentants = async(campos, fn) => {
+exports.getLegalRepresentants = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM representante_legal');
         if (!rows) {
             return [];
@@ -61,10 +61,10 @@ exports.getLegalRepresentants = async(campos, fn) => {
 }
 
 
-exports.getLegalRepresentantById = async(campos, fn) => {
+exports.getLegalRepresentantById = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM representante_legal WHERE rele_id = ? limit 1', [campos]);
         if (!rows) {
             throw new Error('no existe');

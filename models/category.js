@@ -1,10 +1,10 @@
 'use strict';
 
 const db = require('../config/bd')
-exports.updateCategory = async(campos, fn) => {
+exports.updateCategory = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'UPDATE categoria SET cate_nombre = ? WHERE cate_id = ? '
         const rows = await con.query(query, [campos.cate_nombre, campos.cate_id]);
         if (!rows) {
@@ -16,10 +16,10 @@ exports.updateCategory = async(campos, fn) => {
     }
 }
 
-exports.insertCategory = async(campos, fn) => {
+exports.insertCategory = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'INSERT INTO categoria (cate_nombre) VALUES(?)'
         const rows = await con.query(query, [campos.cate_nombre]);
         if (!rows) {
@@ -31,9 +31,9 @@ exports.insertCategory = async(campos, fn) => {
     }
 }
 
-exports.getCategories = async(campos, fn) => {
+exports.getCategories = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM categoria');
         if (!rows) {
             return [];
@@ -45,10 +45,10 @@ exports.getCategories = async(campos, fn) => {
 }
 
 
-exports.getCategoryById = async(campos, fn) => {
+exports.getCategoryById = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM categoria WHERE cate_id = ? limit 1', [campos]);
         if (!rows) {
             throw new Error('no existe');

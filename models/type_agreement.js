@@ -1,10 +1,10 @@
 'use strict';
 
 const db = require('../config/bd')
-exports.updateTypeAgreement = async(campos, fn) => {
+exports.updateTypeAgreement = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'UPDATE tipo_convenio SET tico_nombre = ? WHERE tico_id = ? '
         const rows = await con.query(query, [campos.tico_nombre, campos.tico_id]);
         if (!rows) {
@@ -16,10 +16,10 @@ exports.updateTypeAgreement = async(campos, fn) => {
     }
 }
 
-exports.insertTypeAgreement = async(campos, fn) => {
+exports.insertTypeAgreement = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'INSERT INTO tipo_convenio (tico_nombre) VALUES(?)'
         const rows = await con.query(query, [campos.tico_nombre]);
         if (!rows) {
@@ -31,9 +31,9 @@ exports.insertTypeAgreement = async(campos, fn) => {
     }
 }
 
-exports.getTypesAgreements = async(campos, fn) => {
+exports.getTypesAgreements = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM tipo_convenio');
         if (!rows) {
             return [];
@@ -45,10 +45,10 @@ exports.getTypesAgreements = async(campos, fn) => {
 }
 
 
-exports.getTypeAgreementById = async(campos, fn) => {
+exports.getTypeAgreementById = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM tipo_convenio WHERE tico_id = ? limit 1', [campos]);
         if (!rows) {
             throw new Error('no existe');

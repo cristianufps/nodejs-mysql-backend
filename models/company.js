@@ -1,10 +1,10 @@
 'use strict';
 
 const db = require('../config/bd')
-exports.updateCompany = async(campos, fn) => {
+exports.updateCompany = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'UPDATE empresa SET empr_nombre = ?, empr_nit = ?, empr_direccion = ?, ' +
             'empr_telefono = ?  WHERE empr_id = ? '
         const rows = await con.query(query, [
@@ -24,10 +24,10 @@ exports.updateCompany = async(campos, fn) => {
     }
 }
 
-exports.insertCompany = async(campos, fn) => {
+exports.insertCompany = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let query = 'INSERT INTO empresa (empr_nombre,empr_nit,empr_direccion,empr_telefono,rele_id) ' +
             'VALUES(?,?,?,?,?)'
         const rows = await con.query(query, [
@@ -46,9 +46,9 @@ exports.insertCompany = async(campos, fn) => {
     }
 }
 
-exports.getCompanies = async(campos, fn) => {
+exports.getCompanies = async(con, campos) => {
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM empresa');
         if (!rows) {
             return [];
@@ -60,10 +60,10 @@ exports.getCompanies = async(campos, fn) => {
 }
 
 
-exports.getCompanyById = async(campos, fn) => {
+exports.getCompanyById = async(con, campos) => {
 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const rows = await con.query('SELECT * FROM empresa WHERE empr_id = ? limit 1', [campos]);
         if (!rows) {
             throw new Error('no existe');
