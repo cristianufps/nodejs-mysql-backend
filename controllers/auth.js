@@ -6,7 +6,7 @@ var Usuario = require('../models/user')
 var Email = require('../util/email')
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
-var usuarioRegistrado = null
+// var usuarioRegistrado = null
 const db = require('../config/bd')
 
 var controller = {
@@ -19,10 +19,13 @@ var controller = {
         console.log("AUTH >> PASS ", pass)
 
         try {
+            console.log("Usuario.getUserByEmail ")
             let userResp = await Usuario.getUserByEmail(con, user);
             if (userResp != null) {
+                console.log("userResp != null")
                 let password = await Usuario.getPasswordById(con, userResp.usua_id)
                 if (password != null) {
+                    console.log("password != null")
                     let hash = password.aute_password
                     bcrypt.compare(pass, hash, function(err, result) {
                         if (result) {
@@ -33,6 +36,7 @@ var controller = {
                             token = jwt.sign(payload, 'SecretPassword', {
                                 expiresIn: 7200
                             });
+                            console.log("res.status(200)")
                             return res.status(200).send({
                                 status: 'success',
                                 message: 'Se ha logueado',
@@ -51,17 +55,22 @@ var controller = {
                         message: 'No login',
                     })
                 }
+            } else {
+                return res.status(400).send({
+                    status: 'error',
+                    message: 'No login',
+                })
             }
 
         } catch (error) {
-            next(error)
+            console.log("--------- catch LOGIN--------", error)
             return res.status(400).send({
                 status: 'error',
                 message: 'No login',
                 error: error
             })
         } finally {
-            console.log("--------- FINALLY --------")
+            console.log("--------- FINALLY LOGIN--------")
             if (con != null) {
                 con.end().then(e => { con = null })
             }

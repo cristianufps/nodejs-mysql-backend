@@ -11,14 +11,20 @@ function getPublicUrl(filename) {
 }
 
 async function sendUploadToGCS(req, res, next) {
+    console.log("ACA ESTAMOS ---------")
     const storage = await new Storage({
         projectId: config.GCLOUD_PROJECT,
         keyFilename: path.join(__dirname, '/../config/gcloud.json')
     });
+    console.log("ACA SEGUIMOS ---------")
     const bucket = await storage.bucket(CLOUD_BUCKET);
+    console.log("ACA bucket ---------")
     if (!req.file) {
+        console.log("ACA req.file ---------", req.file)
         return next();
     }
+
+    console.log("const bucket = await storage.bucket(CLOUD_BUCKET); ---------")
     let docName = "soporte_" + req.params.id + "." + req.file.originalname.split('.')[1]
     const gcsname = 'soportes_convenios/' + docName;
     const file = bucket.file(gcsname);
@@ -30,10 +36,12 @@ async function sendUploadToGCS(req, res, next) {
     });
 
     stream.on('error', (err) => {
+        console.log("stream.on('error', (err)  ---------", err)
         req.file.cloudStorageError = err;
         next(err);
     });
     stream.on('finish', () => {
+        console.log("stream.on('finisd', (err)  ---------")
         req.file.cloudStorageObject = gcsname;
         file.makePublic().then(() => {
             req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
@@ -48,7 +56,7 @@ const Multer = require('multer');
 const multer = Multer({
     storage: Multer.MemoryStorage,
     limits: {
-        fileSize: 10 * 1024 * 1024 // no larger than 10mb
+        fileSize: 20 * 1024 * 1024 // no larger than 10mb
     }
 });
 // [END multer]

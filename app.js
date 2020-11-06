@@ -15,6 +15,8 @@ var legal_representant_routes = require('./routes/legal_representant_routes')
 var company_routes = require('./routes/company_routes')
 var agreement_routes = require('./routes/agreement_routes')
 var util_routes = require('./routes/util_routes')
+var request_routes = require('./routes/request_routes')
+var alert_routes = require('./routes/alert_routes')
 
 
 //Middlewares
@@ -33,6 +35,16 @@ app.use((req, res, next) => {
 
 //Añadir prefijos a rutas
 
-app.use('/', users_routes, auth_route, category_routes, type_agreement_routes, legal_representant_routes, company_routes, agreement_routes, util_routes)
+app.use('/',
+    users_routes,
+    auth_route,
+    category_routes,
+    type_agreement_routes,
+    legal_representant_routes,
+    company_routes,
+    agreement_routes,
+    util_routes,
+    request_routes,
+    alert_routes)
 
 module.exports = app;

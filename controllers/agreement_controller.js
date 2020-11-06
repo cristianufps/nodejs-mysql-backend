@@ -188,6 +188,7 @@ var controller = {
     upload_doc: async(req, res, next) => {
         var con = await db.getConnection();
         try {
+            console.log("req.file.cloudStoragePublicUrl ", req.file.cloudStoragePublicUrl)
             if (req.file && req.file.cloudStoragePublicUrl) {
                 let name = req.file.cloudStorageObject
                 name = name.split("/")[1]
@@ -204,14 +205,10 @@ var controller = {
                         url: name
                     })
                 }
-            } else {
-                return res.status(404).send({
-                    status: "Error",
-                    message: 'Ha ocurrido un error subiendo el archivo'
-                })
             }
 
         } catch (error) {
+            console.log("--------- Catch upload_doc --------", error)
             return res.status(404).send({
                 status: 'Error',
                 message: 'Se ha producido un error editando el convenio.'
