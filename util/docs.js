@@ -25,7 +25,7 @@ async function sendUploadToGCS(req, res, next) {
     }
 
     console.log("const bucket = await storage.bucket(CLOUD_BUCKET); ---------")
-    let docName = "soporte_" + req.params.id + "." + req.file.originalname.split('.')[1]
+    let docName = req.file.originalname
     const gcsname = 'soportes_convenios/' + docName;
     const file = bucket.file(gcsname);
     const stream = file.createWriteStream({

@@ -168,3 +168,31 @@ exports.getAgreementsExcel = async(con, campos) => {
         throw e;
     }
 }
+
+exports.deleteAgreementById = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('DELETE FROM convenio WHERE conv_id = ?', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+exports.getAgremmentsByParentId = async(con, campos) => {
+
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM convenio WHERE conv_padre = ? ', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    } catch (e) {
+        throw e;
+    }
+}

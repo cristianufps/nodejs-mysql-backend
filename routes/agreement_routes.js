@@ -18,5 +18,8 @@ router.post('/create_agreement', ConvenioController.create_agreement)
 router.post('/upload_doc/:id', docs.multer.single('image'),
     docs.sendUploadToGCS, ConvenioController.upload_doc)
 
+router.delete('/delete_agreement_by_id/:id', ConvenioController.delete_agreement_by_id)
+
+
 
 module.exports = router

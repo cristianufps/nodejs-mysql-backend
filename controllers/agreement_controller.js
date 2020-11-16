@@ -30,7 +30,8 @@ var controller = {
         } finally {
             console.log("--------- FINALLY create_agreement --------")
             if (con != null) {
-                con.end().then(e => { con = null })
+                await con.end()
+                con = null
             }
         }
 
@@ -58,7 +59,8 @@ var controller = {
         } finally {
             console.log("--------- FINALLY update_agreement --------")
             if (con != null) {
-                con.end().then(e => { con = null })
+                await con.end()
+                con = null
             }
         }
     },
@@ -80,7 +82,8 @@ var controller = {
         } finally {
             console.log("--------- FINALLY list_agreements --------")
             if (con != null) {
-                con.end().then(e => { con = null })
+                await con.end()
+                con = null
             }
         }
     },
@@ -125,7 +128,8 @@ var controller = {
         } finally {
             console.log("--------- FINALLY list_agreements_parents --------")
             if (con != null) {
-                con.end().then(e => { con = null })
+                await con.end()
+                con = null
             }
         }
 
@@ -181,7 +185,8 @@ var controller = {
         } finally {
             console.log("--------- FINALLY CRON --------")
             if (con != null) {
-                con.end().then(e => { con = null })
+                await con.end()
+                con = null
             }
         }
     },
@@ -216,7 +221,8 @@ var controller = {
         } finally {
             console.log("--------- FINALLY upload_doc --------")
             if (con != null) {
-                con.end().then(e => { con = null })
+                await con.end()
+                con = null
             }
         }
     },
@@ -238,7 +244,45 @@ var controller = {
         } finally {
             console.log("--------- FINALLY list_agreements_specific --------")
             if (con != null) {
-                con.end().then(e => { con = null })
+                await con.end()
+                con = null
+            }
+        }
+    },
+    delete_agreement_by_id: async(req, res) => {
+        var con = await db.getConnection();
+        let id = req.params.id
+        try {
+
+            let val = await Convenio.getAgremmentsByParentId(con, id)
+            console.log("res delete --- -> ", val)
+            if (val) {
+                return res.status(200).send({
+                    status: 'success',
+                    agremments: val,
+                    error: true
+                })
+            } else {
+                let agre = await Convenio.deleteAgreementById(con, id)
+                if (agre) {
+                    return res.status(200).send({
+                        status: 'success',
+                        message: 'Se ha eliminado el convenio',
+                        error: false
+                    })
+                }
+            }
+
+        } catch (error) {
+            return res.status(404).send({
+                status: 'Error',
+                message: 'Se ha producido un error buscando la empresa.'
+            })
+        } finally {
+            console.log("--------- FINALLY agreement_by_id --------")
+            if (con != null) {
+                await con.end()
+                con = null
             }
         }
     },

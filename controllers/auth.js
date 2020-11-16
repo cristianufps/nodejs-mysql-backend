@@ -124,7 +124,7 @@ var controller = {
             let response = await Usuario.getUserByEmail(con, user)
             if (response) {
                 const payload = {
-                    user_id: respuesta.usua_id
+                    user_id: response.usua_id
                 };
                 const token = jwt.sign(payload, 'SecretPassword', {
                     expiresIn: 18000
@@ -163,7 +163,8 @@ var controller = {
             }
         }
     },
-    reset: (req, res, next) => {
+    reset: async(req, res, next) => {
+        var con = await db.getConnection();
         let token = req.headers['authorization']
         let newPassword = req.body.password
         token = token.replace('Bearer ', '')
@@ -172,38 +173,42 @@ var controller = {
         try {
             let decoded = jwt.verify(token, 'SecretPassword');
             let idUsuario = decoded.user_id
-            bcrypt.hash(newPassword, saltRounds, function(err, hash) {
+            let change = await bcrypt.hash(newPassword, saltRounds)
+
+            if (change) {
                 let campos = {
                     usua_id: idUsuario,
-                    password: hash
+                    password: change
                 }
-                Usuario.updatePasswordByUserId(campos).then(usuario => {
-                    console.log("updatePasswordByUserId ", usuario)
-                    if (usuario != null) {
-                        return res.status(200).send({
-                            status: 'Success',
-                            message: 'Se ha establecido la contraseña con éxito.'
-                        })
-                    } else {
-                        return res.status(404).send({
-                            status: 'Error',
-                            message: 'Not found'
-                        })
-                    }
-                }).catch(err => {
+                let resp = await Usuario.updatePasswordByUserId(con, campos)
+                console.log("updatePasswordByUserId ", resp)
+                if (resp != null) {
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Se ha establecido la contraseña con éxito.'
+                    })
+                } else {
                     return res.status(404).send({
                         status: 'Error',
                         message: 'Not found'
                     })
+                }
+            } else {
+                return res.status(404).send({
+                    status: 'Error',
+                    message: 'Error hash'
                 })
-
-            });
+            }
         } catch (err) {
-            next(error)
-            return res.status(200).send({
+            return res.status(404).send({
                 status: 'Error',
                 message: 'Expired token'
             })
+        } finally {
+            console.log("--------- FINALLY RESET --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
         }
 
     },
@@ -218,12 +223,18 @@ var controller = {
                 let hash = pass.aute_password
                 bcrypt.compare(actualPassword, hash, function(err, result) {
                     if (result) {
+                        if (con != null) {
+                            con.end().then(e => { con = null })
+                        }
                         return res.status(200).send({
                             status: 'success',
                             message: 'La contraseña coincide',
                             response: true
                         })
                     } else {
+                        if (con != null) {
+                            con.end().then(e => { con = null })
+                        }
                         return res.status(200).send({
                             status: 'success',
                             message: 'Password incorrecta',

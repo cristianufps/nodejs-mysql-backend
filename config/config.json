@@ -14,7 +14,7 @@
         "database": "swac",
         "host": "35.236.33.16",
         "socketpatch": "/cloudsql/swac-app:us-west2:swac",
-        "url": "http://swac.ayd.ingsistemasufps.co/",
+        "url": "http://swac.ayd.ingsistemasufps.co",
         "CLOUD_BUCKET": "swac-app.appspot.com",
         "GCLOUD_PROJECT": "swac-app"
     },

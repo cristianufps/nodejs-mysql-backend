@@ -17,6 +17,7 @@ var agreement_routes = require('./routes/agreement_routes')
 var util_routes = require('./routes/util_routes')
 var request_routes = require('./routes/request_routes')
 var alert_routes = require('./routes/alert_routes')
+var student_routes = require('./routes/student_routes')
 
 
 //Middlewares
@@ -45,6 +46,7 @@ app.use('/',
     agreement_routes,
     util_routes,
     request_routes,
-    alert_routes)
+    alert_routes,
+    student_routes)
 
 module.exports = app;

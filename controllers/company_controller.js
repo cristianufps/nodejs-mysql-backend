@@ -10,13 +10,24 @@ var controller = {
         let empresa = req.body.company
 
         try {
-            let resp = await Empresa.insertCompany(con, empresa)
-            if (resp) {
-                console.log("res insert --- -> ", resp.insertId)
+            let val = await Empresa.validateNit(con, empresa.empr_nit)
+            console.log("validate nit -<> ", val)
+            if (val) {
                 return res.status(200).send({
                     status: 'success',
-                    message: 'Se ha registrado la empresa con éxito.'
+                    message: 'El nit de la empresa ya existe',
+                    error: true
                 })
+            } else {
+                let resp = await Empresa.insertCompany(con, empresa)
+                if (resp) {
+                    console.log("res insert --- -> ", resp.insertId)
+                    return res.status(200).send({
+                        status: 'success',
+                        message: 'Se ha registrado la empresa con éxito.',
+                        error: false
+                    })
+                }
             }
         } catch (error) {
             return res.status(404).send({
@@ -37,12 +48,23 @@ var controller = {
         empresa.empr_id = idEmpresa
 
         try {
-            let resp = await Empresa.updateCompany(con, empresa)
-            if (resp) {
+            let val = await Empresa.validateNitUpdate(con, empresa.empr_nit)
+            console.log("validate nit -<> ", val)
+            if (val.empr_id > 0) {
                 return res.status(200).send({
                     status: 'success',
-                    message: 'Se ha editado la empresa con éxito.'
+                    message: 'El nit de la empresa ya existe',
+                    error: true
                 })
+            } else {
+                let resp = await Empresa.updateCompany(con, empresa)
+                if (resp) {
+                    return res.status(200).send({
+                        status: 'success',
+                        message: 'Se ha editado la empresa con éxito.',
+                        error: false
+                    })
+                }
             }
         } catch (error) {
             return res.status(404).send({
@@ -98,6 +120,40 @@ var controller = {
             })
         } finally {
             console.log("--------- FINALLY create_category --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
+    },
+    delete_company_by_id: async(req, res) => {
+        let con = await db.getConnection();
+        let id = req.params.id
+
+        try {
+            let val = await Empresa.getAgremmentsByCompanyId(con, id)
+            console.log("res delete --- -> ", val)
+            if (val) {
+                return res.status(200).send({
+                    status: 'success',
+                    agremments: resp,
+                    error: true
+                })
+            } else {
+                let resp = await Empresa.deleteCompanyById(con, id)
+                console.log("res deleteCompanyById --- -> ", resp)
+                return res.status(200).send({
+                    status: 'success',
+                    message: 'Se ha eliminado la empresa con éxito.',
+                    error: false
+                })
+            }
+        } catch (error) {
+            return res.status(404).send({
+                status: 'Error',
+                message: 'Se ha producido un error buscando la empresa.'
+            })
+        } finally {
+            console.log("--------- FINALLY delete_company_by_id --------")
             if (con != null) {
                 con.end().then(e => { con = null })
             }

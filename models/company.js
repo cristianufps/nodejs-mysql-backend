@@ -73,3 +73,69 @@ exports.getCompanyById = async(con, campos) => {
         throw e;
     }
 }
+
+exports.validateNit = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM empresa WHERE empr_nit = ?', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.validateNitUpdate = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM empresa WHERE empr_nit = ? AND empr_id <> ?', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.getAgremmentsByCompanyId = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM convenio WHERE empr_id = ? ', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.deleteCompanyById = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('DELETE FROM empresa WHERE empr_id = ?', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}
+
+// exports.deleteAlertByRequestId = async(con, campos) => {
+//     try {
+//         con = await db.getConnection();
+//         const rows = await con.query('DELETE FROM alerta WHERE soli_id = ?', [campos]);
+//         if (!rows) {
+//             throw new Error('no existe');
+//         }
+//         console.log("ROWS --->> ", rows)
+//         return rows;
+//     } catch (e) {
+//         throw e;
+//     }
+// }
