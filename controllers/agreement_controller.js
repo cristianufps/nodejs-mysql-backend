@@ -255,21 +255,29 @@ var controller = {
         try {
 
             let val = await Convenio.getAgremmentsByParentId(con, id)
-            console.log("res delete --- -> ", val)
-            if (val) {
+            if (val.length > 0) {
                 return res.status(200).send({
                     status: 'success',
                     agremments: val,
                     error: true
                 })
             } else {
-                let agre = await Convenio.deleteAgreementById(con, id)
-                if (agre) {
+                let vale = await Convenio.getStudentsByAgremment(con, id)
+                if (vale.length > 0) {
                     return res.status(200).send({
                         status: 'success',
-                        message: 'Se ha eliminado el convenio',
-                        error: false
+                        students: vale,
+                        error: true
                     })
+                } else {
+                    let agre = await Convenio.deleteAgreementById(con, id)
+                    if (agre) {
+                        return res.status(200).send({
+                            status: 'success',
+                            message: 'Se ha eliminado el convenio',
+                            error: false
+                        })
+                    }
                 }
             }
 

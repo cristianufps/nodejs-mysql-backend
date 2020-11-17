@@ -48,9 +48,9 @@ var controller = {
         empresa.empr_id = idEmpresa
 
         try {
-            let val = await Empresa.validateNitUpdate(con, empresa.empr_nit)
+            let val = await Empresa.validateNitUpdate(con, empresa)
             console.log("validate nit -<> ", val)
-            if (val.empr_id > 0) {
+            if (val) {
                 return res.status(200).send({
                     status: 'success',
                     message: 'El nit de la empresa ya existe',

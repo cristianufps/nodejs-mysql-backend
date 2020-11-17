@@ -189,9 +189,24 @@ exports.getAgremmentsByParentId = async(con, campos) => {
         con = await db.getConnection();
         const rows = await con.query('SELECT * FROM convenio WHERE conv_padre = ? ', [campos]);
         if (!rows) {
-            throw new Error('no existe');
+            return [];
         }
-        return rows[0];
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.getStudentsByAgremment = async(con, campos) => {
+
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM estudiante WHERE conv_id = ? ', [campos]);
+        if (!rows) {
+            return [];
+        }
+        console.log("cccc ", rows);
+        return rows;
     } catch (e) {
         throw e;
     }

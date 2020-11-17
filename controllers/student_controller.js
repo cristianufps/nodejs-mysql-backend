@@ -6,24 +6,35 @@ var controller = {
 
     create_student: async(req, res) => {
         var con = await db.getConnection();
-        let est = req.body.category
+        let est = req.body.student
 
         try {
-            let respuesta = await Student.insertStudent(con, est)
-            if (respuesta) {
-                console.log("res insert --- -> ", respuesta.insertId)
+
+            let validation = await Student.getStudentByCode(con, est.estu_codigo)
+            if (validation) {
                 return res.status(200).send({
-                    status: 'success',
-                    message: 'Se ha registrado el estudiante con éxito.'
+                    error: true,
+                    message: 'Ya existe el codigo'
                 })
+            } else {
+                let respuesta = await Student.insertStudent(con, est)
+                if (respuesta) {
+                    console.log("res insert --- -> ", respuesta.insertId)
+                    return res.status(200).send({
+                        status: 'success',
+                        message: 'Se ha registrado el estudiante con éxito.'
+                    })
+                }
             }
+
         } catch (error) {
+            console.log("error catch,", error);
             return res.status(404).send({
                 status: 'Error',
-                message: 'Se ha producido un error registrando  el estudiante.'
+                message: 'Se ha producido un error registrando el estudiante.'
             })
         } finally {
-            console.log("--------- FINALLY create_category --------")
+            console.log("--------- FINALLY create_student --------")
             if (con != null) {
                 con.end().then(e => { con = null })
             }
@@ -37,12 +48,23 @@ var controller = {
         est.estu_id = idStudent
 
         try {
-            let respuesta = await Student.updateStudent(con, est)
-            if (respuesta) {
+            let val = await Student.validateCodeUpdate(con, est)
+            console.log("cae ", val);
+            if (val) {
                 return res.status(200).send({
                     status: 'success',
-                    message: 'Se ha editado el estudiante con éxito.'
+                    message: 'El codigo del estudiante ya existe',
+                    error: true
                 })
+            } else {
+                let respuesta = await Student.updateStudent(con, est)
+                if (respuesta) {
+                    return res.status(200).send({
+                        status: 'success',
+                        message: 'Se ha editado el estudiante con éxito.',
+                        error: false
+                    })
+                }
             }
 
         } catch (error) {
@@ -87,7 +109,7 @@ var controller = {
             if (response) {
                 return res.status(200).send({
                     status: 'success',
-                    data: response
+                    response
                 })
             }
         } catch (error) {

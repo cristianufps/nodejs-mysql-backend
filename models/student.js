@@ -27,7 +27,7 @@ exports.insertStudent = async(con, campos) => {
 
     try {
         con = await db.getConnection();
-        let query = 'INSERT INTO estudiante (estu_nombre,estu_apellidos,estu_codigo,conv_id) ' +
+        let query = 'INSERT INTO estudiante (estu_nombres,estu_apellidos,estu_codigo,conv_id) ' +
             ' VALUES(?,?,?,?)'
         const rows = await con.query(query, [
             campos.estu_nombres,
@@ -48,7 +48,7 @@ exports.insertStudent = async(con, campos) => {
 exports.getStudents = async(con, campos) => {
     try {
         con = await db.getConnection();
-        const rows = await con.query('SELECT * FROM estudiante');
+        const rows = await con.query('SELECT * FROM estudiante e INNER JOIN convenio c ON c.conv_id = e.conv_id');
         if (!rows) {
             return [];
         }
@@ -64,6 +64,33 @@ exports.getStudentById = async(con, campos) => {
     try {
         con = await db.getConnection();
         const rows = await con.query('SELECT * FROM estudiante WHERE estu_id = ? limit 1', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.getStudentByCode = async(con, campos) => {
+
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM estudiante WHERE estu_codigo = ? limit 1', [campos]);
+        if (!rows) {
+            throw new Error('no existe');
+        }
+        return rows[0];
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.validateCodeUpdate = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM estudiante WHERE estu_codigo = ? AND estu_id <> ?', [campos.estu_codigo, campos.estu_id]);
         if (!rows) {
             throw new Error('no existe');
         }

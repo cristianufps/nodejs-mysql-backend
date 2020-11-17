@@ -90,7 +90,7 @@ exports.validateNit = async(con, campos) => {
 exports.validateNitUpdate = async(con, campos) => {
     try {
         con = await db.getConnection();
-        const rows = await con.query('SELECT * FROM empresa WHERE empr_nit = ? AND empr_id <> ?', [campos]);
+        const rows = await con.query('SELECT * FROM empresa WHERE empr_nit = ? AND empr_id <> ?', [campos.empr_nit, campos.empr_id]);
         if (!rows) {
             throw new Error('no existe');
         }
