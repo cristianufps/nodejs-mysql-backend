@@ -135,7 +135,7 @@ var controller = {
             if (val) {
                 return res.status(200).send({
                     status: 'success',
-                    agremments: resp,
+                    agremments: val,
                     error: true
                 })
             } else {

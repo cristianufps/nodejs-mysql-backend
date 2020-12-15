@@ -16,15 +16,11 @@ async function sendUploadToGCS(req, res, next) {
         projectId: config.GCLOUD_PROJECT,
         keyFilename: path.join(__dirname, '/../config/gcloud.json')
     });
-    console.log("ACA SEGUIMOS ---------")
     const bucket = await storage.bucket(CLOUD_BUCKET);
     console.log("ACA bucket ---------")
     if (!req.file) {
-        console.log("ACA req.file ---------", req.file)
         return next();
     }
-
-    console.log("const bucket = await storage.bucket(CLOUD_BUCKET); ---------")
     let docName = req.file.originalname
     const gcsname = 'soportes_convenios/' + docName;
     const file = bucket.file(gcsname);
@@ -34,7 +30,6 @@ async function sendUploadToGCS(req, res, next) {
         },
         resumable: false
     });
-
     stream.on('error', (err) => {
         console.log("stream.on('error', (err)  ---------", err)
         req.file.cloudStorageError = err;
@@ -48,7 +43,6 @@ async function sendUploadToGCS(req, res, next) {
             next();
         });
     });
-
     stream.end(req.file.buffer);
 }
 

@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 const saltRounds = 12;
 var Usuario = require('../models/user')
 var Email = require('../util/email')
-const env = process.env.NODE_ENV || 'development';
+    //universidad
+const env = process.env.NODE_ENV || 'universidad';
 const config = require(__dirname + '/../config/config.json')[env];
 // var usuarioRegistrado = null
 const db = require('../config/bd')

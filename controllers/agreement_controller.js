@@ -169,9 +169,8 @@ var controller = {
                         subject: 'Alerta Temprana',
                         mail: bodyEmail
                     }
-
                     Email.send(datos).then(envio => {
-                        console.log("SE ha enviado el correo")
+                        console.log("Reponse envio email --> ", envio)
                     }).catch(err => {
                         console.log("ERROR ENVIO -->> ", err)
                     })
@@ -253,34 +252,38 @@ var controller = {
         var con = await db.getConnection();
         let id = req.params.id
         try {
-
             let val = await Convenio.getAgremmentsByParentId(con, id)
+                // Busqueda de convenios "hijos relacionados"
             if (val.length > 0) {
+                //Si entra en la condicion no puede eliminarse el convenio
                 return res.status(200).send({
                     status: 'success',
-                    agremments: val,
-                    error: true
+                    agremments: val, //Devuelve los convenios relacionados
+                    error: true //La bandera error indica cuando se eliminó o no el convenio
                 })
             } else {
+                // Si no tiene convenios pasa por otra condicion
                 let vale = await Convenio.getStudentsByAgremment(con, id)
+                    //Busqueda de estudiantes relacionados al convenio
                 if (vale.length > 0) {
+                    //Si entra en la condicion no puede eliminarse el convenio
                     return res.status(200).send({
                         status: 'success',
-                        students: vale,
+                        students: vale, //Devuelve los estudiantes relacionados
                         error: true
                     })
                 } else {
+                    //En caso de pasar las dos condiciones ahora si se elimina el convenio
                     let agre = await Convenio.deleteAgreementById(con, id)
                     if (agre) {
                         return res.status(200).send({
                             status: 'success',
                             message: 'Se ha eliminado el convenio',
-                            error: false
+                            error: false //No hubo problemas y se eliminó el convenio
                         })
                     }
                 }
             }
-
         } catch (error) {
             return res.status(404).send({
                 status: 'Error',
@@ -294,6 +297,10 @@ var controller = {
             }
         }
     },
+    addTested: function(value) {
+        var result = value + " tested";
+        return result;
+    }
 }
 
 module.exports = controller

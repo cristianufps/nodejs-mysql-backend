@@ -125,6 +125,30 @@ var controller = {
         }
 
     },
+    students_by_agreement: async(req, res) => {
+        var con = await db.getConnection();
+        let id = req.params.id
+        try {
+            let response = await Student.getStudentsByAgreement(con, id)
+            if (response) {
+                return res.status(200).send({
+                    status: 'success',
+                    response
+                })
+            }
+        } catch (error) {
+            return res.status(404).send({
+                status: 'Error',
+                message: 'Se ha producido un error listando los estudiantes.'
+            })
+        } finally {
+            console.log("--------- FINALLY students_by_agreement --------")
+            if (con != null) {
+                con.end().then(e => { con = null })
+            }
+        }
+
+    },
 }
 
 module.exports = controller

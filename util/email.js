@@ -1,51 +1,40 @@
 var nodemailer = require('nodemailer');
 const { google } = require("googleapis");
+const { oauth2 } = require('googleapis/build/src/apis/oauth2');
 
-const fs = require('fs');
-const readline = require('readline');
+const CLIENT_ID = '1078653232327-0ack9us4oj8ueh18570pnoo9ehr3f7p0.apps.googleusercontent.com'
+const CLIENT_SECRET = 'ieTyj70cjZQQYm0ocVFGZfkr'
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
+const REFRESH_TOKEN = '1//04dGMUK4fpeGnCgYIARAAGAQSNwF-L9IrM_ZYneHNT_OP1QmPFe8HzDYco-KPJnsevVC-PLMehVbL4kIWBvXdFf0ORKB_1mRGQfM'
 
-// If modifying these scopes, delete token.json.
 
-
-
+const OAuth2 = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+OAuth2.setCredentials({ refresh_token: REFRESH_TOKEN })
 
 exports.send = async(campos, fn) => {
-    const OAuth2 = google.auth.OAuth2;
-    // const oauth2Client = await new OAuth2(
-    //     "67168347168-m0cce5hsusu3738jtq41qm6p5quplc3b.apps.googleusercontent.com", // ClientID 
-    //     "IoBS74CfA3gUtYGkDs1c2TWq", // Client Secret 
-    //     "https://developers.google.com/oauthplayground" // Redirect URL 
-    // );
-
-    // await oauth2Client.setCredentials({
-    //     refresh_token: "1//04NJCGE_px2x9CgYIARAAGAQSNwF-L9IrGIQLm4eWmh3V27KqpQIgflTuEM-K8vQM3c7K0MibCYZsd8QiHJ8EAKySBUpr8LokUd0"
-    // });
-
-    // console.log("--- OAuth2 >>>>", oauth2Client)
-
-    // const accessToken = await oauth2Client.getAccessToken().then(res => {
-    //     console.log("--- accessToken oauth2Client >>>>", res)
-    // }).catch(err => {
-    //     console.log("--- accessToken ERRORRRR >>>>", err)
-
-    // })
-    console.log(">>>>>>>>>>>>>>>> CORREO >>>>>>>>>>>>>>>>>>>>><<<<<<<<<")
-
-    // console.log("--- accessToken >>>>", accessToken)
-
-
-    // let transporter = nodemailer.createTransport({
-    //     service: 'Gmail',
+    // console.log(">>>>>>>>>>>>>>>> ACCESS_TOKEN >>>>>>>>>>>>>>>>>>>>><<<<<<<<<")
+    // const accessToken = await OAuth2.getAccessToken()
+    // console.log(accessToken)
+    // let transporterOauth = nodemailer.createTransport({
+    //     host: 'smtp.gmail.com',
+    //     port: 465,
+    //     secure: true,
     //     auth: {
-    //         type: "OAuth2",
-    //         user: "ufpsconvenios@gmail.com",
-    //         clientId: "67168347168-m0cce5hsusu3738jtq41qm6p5quplc3b.apps.googleusercontent.com",
-    //         clientSecret: "IoBS74CfA3gUtYGkDs1c2TWq",
-    //         refreshToken: "1//04NJCGE_px2x9CgYIARAAGAQSNwF-L9IrGIQLm4eWmh3V27KqpQIgflTuEM-K8vQM3c7K0MibCYZsd8QiHJ8EAKySBUpr8LokUd0",
-    //         accessToken: accessToken
+    //         type: 'OAuth2',
+    //         user: 'convenio.ufps@gmail.com',
+    //         clientId: CLIENT_ID,
+    //         clientSecret: CLIENT_SECRET,
+    //         refreshToken: REFRESH_TOKEN,
+    //         accessToken: accessToken.token
     //     },
-
+    //     tls: {
+    //         rechazarUnauthorized: false
+    //     }
     // });
+    // console.log(">>>>>>>>>>>>>>>> transporterOauth >>>>>>>>>>>>>>>>>>>>><<<<<<<<<")
+
+    // console.log(transporterOauth)
+
 
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -57,6 +46,7 @@ exports.send = async(campos, fn) => {
             rejectUnauthorized: false
         }
     });
+
     let info = await transporter.sendMail({
             from: 'CONVENIOS UFPS', // sender address
             to: campos.to, // list of receivers

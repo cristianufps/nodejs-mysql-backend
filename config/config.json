@@ -14,7 +14,7 @@
         "database": "swac",
         "host": "35.236.33.16",
         "socketpatch": "/cloudsql/swac-app:us-west2:swac",
-        "url": "http://swac.ayd.ingsistemasufps.co",
+        "url": "http://swac.ingsw.ingsistemasufps.co",
         "CLOUD_BUCKET": "swac-app.appspot.com",
         "GCLOUD_PROJECT": "swac-app"
     },
@@ -27,5 +27,15 @@
         "url": "https://nuxt-convenio.rj.r.appspot.com",
         "CLOUD_BUCKET": "convenio-273922.appspot.com",
         "GCLOUD_PROJECT": "convenio-273922"
+    },
+    "universidad": {
+        "username": "swacb_swacuser",
+        "password": "swac12345",
+        "database": "swacb_swacbd",
+        "host": "localhost",
+        "socketpatch": "/cloudsql/swac-app:us-west2:swac",
+        "url": "http://swac.ingsw.ingsistemasufps.co",
+        "CLOUD_BUCKET": "swac-app.appspot.com",
+        "GCLOUD_PROJECT": "swac-app"
     }
 }

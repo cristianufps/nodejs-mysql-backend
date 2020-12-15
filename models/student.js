@@ -58,6 +58,22 @@ exports.getStudents = async(con, campos) => {
     }
 }
 
+exports.getStudentsExcel = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT estu_codigo AS codigo,estu_nombres AS nombres, estu_apellidos AS apellidos,' +
+            ' conv_nombre AS convenio, estu_fecharegistro AS registro' +
+            ' FROM estudiante e ' +
+            ' INNER JOIN convenio c ON c.conv_id = e.conv_id');
+        if (!rows) {
+            return [];
+        }
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}
+
 
 exports.getStudentById = async(con, campos) => {
 
@@ -95,6 +111,36 @@ exports.validateCodeUpdate = async(con, campos) => {
             throw new Error('no existe');
         }
         return rows[0];
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.getStudentsByAgreement = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT * FROM estudiante e INNER JOIN convenio c ON c.conv_id = e.conv_id WHERE e.conv_id = ?', [campos]);
+        if (!rows) {
+            return [];
+        }
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.getStudentsExcelByAgreement = async(con, campos) => {
+    try {
+        con = await db.getConnection();
+        const rows = await con.query('SELECT estu_codigo AS codigo,estu_nombres AS nombres, estu_apellidos AS apellidos,' +
+            ' conv_nombre AS convenio, estu_fecharegistro AS registro' +
+            ' FROM estudiante e ' +
+            ' INNER JOIN convenio c ON c.conv_id = e.conv_id' +
+            ' WHERE e.conv_id = ?', [campos]);
+        if (!rows) {
+            return [];
+        }
+        return rows;
     } catch (e) {
         throw e;
     }
